@@ -4,9 +4,14 @@
 from flask import Flask, jsonify, send_from_directory, make_response, request
 from datetime import datetime, timedelta
 import json
+import logging
 import os
 import re
+import secrets
 import threading
+
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 # Paths (project-relative, no hardcoded absolute paths)
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -132,6 +137,26 @@ def extract_memo_from_file(file_path):
         return "「昨日记录加载失败」\n\n「往者不可谏，来者犹可追。」"
 
 app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="/static")
+
+# Rate limiter
+limiter = Limiter(get_remote_address, app=app, default_limits=[])
+
+# Admin token for protected endpoints
+OFFICE_ADMIN_TOKEN = os.environ.get("OFFICE_ADMIN_TOKEN", "")
+if not OFFICE_ADMIN_TOKEN:
+    logging.warning("OFFICE_ADMIN_TOKEN is not set. Protected endpoints will reject all requests.")
+
+
+def require_admin_token():
+    """Validate Authorization: Bearer <token> header against OFFICE_ADMIN_TOKEN.
+
+    Returns a 401 response tuple on failure, or None on success.
+    """
+    auth_header = request.headers.get("Authorization", "")
+    token = auth_header[len("Bearer "):] if auth_header.startswith("Bearer ") else ""
+    if not OFFICE_ADMIN_TOKEN or not secrets.compare_digest(token, OFFICE_ADMIN_TOKEN):
+        return jsonify({"ok": False, "msg": "Unauthorized"}), 401
+    return None
 
 # Guard join-agent critical section to enforce per-key concurrency under parallel requests
 join_lock = threading.Lock()
@@ -413,6 +438,9 @@ def get_agents():
 @app.route("/agent-approve", methods=["POST"])
 def agent_approve():
     """Approve an agent (set authStatus to approved)"""
+    err = require_admin_token()
+    if err:
+        return err
     try:
         data = request.get_json()
         agent_id = (data.get("agentId") or "").strip()
@@ -431,12 +459,16 @@ def agent_approve():
         save_agents_state(agents)
         return jsonify({"ok": True, "agentId": agent_id, "authStatus": "approved"})
     except Exception as e:
-        return jsonify({"ok": False, "msg": str(e)}), 500
+        logging.exception("agent-approve error")
+        return jsonify({"ok": False, "msg": "내부 서버 오류가 발생했습니다."}), 500
 
 
 @app.route("/agent-reject", methods=["POST"])
 def agent_reject():
     """Reject an agent (set authStatus to rejected and optionally revoke key)"""
+    err = require_admin_token()
+    if err:
+        return err
     try:
         data = request.get_json()
         agent_id = (data.get("agentId") or "").strip()
@@ -469,10 +501,12 @@ def agent_reject():
         save_join_keys(keys_data)
         return jsonify({"ok": True, "agentId": agent_id, "authStatus": "rejected"})
     except Exception as e:
-        return jsonify({"ok": False, "msg": str(e)}), 500
+        logging.exception("agent-reject error")
+        return jsonify({"ok": False, "msg": "내부 서버 오류가 발생했습니다."}), 500
 
 
 @app.route("/join-agent", methods=["POST"])
+@limiter.limit("60 per minute")
 def join_agent():
     """Add a new agent with one-time join key validation and pending auth"""
     try:
@@ -604,7 +638,8 @@ def join_agent():
 
         return jsonify({"ok": True, "agentId": agent_id, "authStatus": "approved", "nextStep": "已自动批准，立即开始推送状态"})
     except Exception as e:
-        return jsonify({"ok": False, "msg": str(e)}), 500
+        logging.exception("join-agent error")
+        return jsonify({"ok": False, "msg": "내부 서버 오류가 발생했습니다."}), 500
 
 
 @app.route("/leave-agent", methods=["POST"])
@@ -652,7 +687,8 @@ def leave_agent():
         save_join_keys(keys_data)
         return jsonify({"ok": True})
     except Exception as e:
-        return jsonify({"ok": False, "msg": str(e)}), 500
+        logging.exception("leave-agent error")
+        return jsonify({"ok": False, "msg": "내부 서버 오류가 발생했습니다."}), 500
 
 
 @app.route("/status", methods=["GET"])
@@ -663,6 +699,7 @@ def get_status():
 
 
 @app.route("/agent-push", methods=["POST"])
+@limiter.limit("60 per minute")
 def agent_push():
     """Remote openclaw actively pushes status to office.
 
@@ -729,7 +766,8 @@ def agent_push():
         save_agents_state(agents)
         return jsonify({"ok": True, "agentId": agent_id, "area": target.get("area")})
     except Exception as e:
-        return jsonify({"ok": False, "msg": str(e)}), 500
+        logging.exception("agent-push error")
+        return jsonify({"ok": False, "msg": "내부 서버 오류가 발생했습니다."}), 500
 
 
 @app.route("/health", methods=["GET"])
@@ -778,15 +816,19 @@ def get_yesterday_memo():
                 "msg": "没有找到昨日日记"
             })
     except Exception as e:
+        logging.exception("yesterday-memo error")
         return jsonify({
             "success": False,
-            "msg": str(e)
+            "msg": "내부 서버 오류가 발생했습니다."
         }), 500
 
 
 @app.route("/set_state", methods=["POST"])
 def set_state_endpoint():
     """Set state via POST (for UI control panel)"""
+    err = require_admin_token()
+    if err:
+        return err
     try:
         data = request.get_json()
         if not isinstance(data, dict):
@@ -803,7 +845,8 @@ def set_state_endpoint():
         save_state(state)
         return jsonify({"status": "ok"})
     except Exception as e:
-        return jsonify({"status": "error", "msg": str(e)}), 500
+        logging.exception("set_state error")
+        return jsonify({"status": "error", "msg": "내부 서버 오류가 발생했습니다."}), 500
 
 
 if __name__ == "__main__":
