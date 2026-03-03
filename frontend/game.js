@@ -362,15 +362,15 @@ function create() {
   const plaqueBg = game.add.rectangle(plaqueX, plaqueY, LAYOUT.plaque.width, LAYOUT.plaque.height, 0x5d4037);
   plaqueBg.setStrokeStyle(3, 0x3e2723);
   const plaqueText = game.add.text(plaqueX, plaqueY, '나의 픽셀 오피스', {
-    fontFamily: 'Galmuri11, monospace',
+    fontFamily: 'DungGeunMo, monospace',
     fontSize: '18px',
     fill: '#ffd700',
     fontWeight: 'bold',
     stroke: '#000',
     strokeThickness: 2
   }).setOrigin(0.5);
-  game.add.text(plaqueX - 190, plaqueY, '⭐', { fontFamily: 'Galmuri11, monospace', fontSize: '20px' }).setOrigin(0.5);
-  game.add.text(plaqueX + 190, plaqueY, '⭐', { fontFamily: 'Galmuri11, monospace', fontSize: '20px' }).setOrigin(0.5);
+  game.add.text(plaqueX - 190, plaqueY, '⭐', { fontFamily: 'DungGeunMo, monospace', fontSize: '20px' }).setOrigin(0.5);
+  game.add.text(plaqueX + 190, plaqueY, '⭐', { fontFamily: 'DungGeunMo, monospace', fontSize: '20px' }).setOrigin(0.5);
 
   // === 식물들 (LAYOUT에서) ===
   const plantFrameCount = 16;
@@ -858,7 +858,7 @@ function showBubble() {
   const bubbleY = anchorY - 70;
   const bg = game.add.rectangle(anchorX, bubbleY, text.length * 10 + 20, 28, 0xffffff, 0.95);
   bg.setStrokeStyle(2, 0x000000);
-  const txt = game.add.text(anchorX, bubbleY, text, { fontFamily: 'Galmuri11, monospace', fontSize: '12px', fill: '#000', align: 'center' }).setOrigin(0.5);
+  const txt = game.add.text(anchorX, bubbleY, text, { fontFamily: 'DungGeunMo, monospace', fontSize: '12px', fill: '#000', align: 'center' }).setOrigin(0.5);
   bubble = game.add.container(0, 0, [bg, txt]);
   bubble.setDepth(1200);
   setTimeout(() => { if (bubble) { bubble.destroy(); bubble = null; } }, 3000);
@@ -873,7 +873,7 @@ function showCatBubble() {
   const anchorY = window.catSprite.y - 60;
   const bg = game.add.rectangle(anchorX, anchorY, text.length * 10 + 20, 24, 0xfffbeb, 0.95);
   bg.setStrokeStyle(2, 0xd4a574);
-  const txt = game.add.text(anchorX, anchorY, text, { fontFamily: 'Galmuri11, monospace', fontSize: '11px', fill: '#8b6914', align: 'center' }).setOrigin(0.5);
+  const txt = game.add.text(anchorX, anchorY, text, { fontFamily: 'DungGeunMo, monospace', fontSize: '11px', fill: '#8b6914', align: 'center' }).setOrigin(0.5);
   window.catBubble = game.add.container(0, 0, [bg, txt]);
   window.catBubble.setDepth(2100);
   setTimeout(() => { if (window.catBubble) { window.catBubble.destroy(); window.catBubble = null; } }, 4000);
@@ -942,14 +942,14 @@ function renderAgent(agent) {
 
     // 픽셀 캐릭터: 별 아이콘 사용, 더 눈에 띄게
     const starIcon = game.add.text(0, 0, '⭐', {
-      fontFamily: 'Galmuri11, monospace',
+      fontFamily: 'DungGeunMo, monospace',
       fontSize: '32px'
     }).setOrigin(0.5);
     starIcon.name = 'starIcon';
 
     // 이름 태그 (플로팅)
     const nameTag = game.add.text(0, -36, name, {
-      fontFamily: 'Galmuri11, monospace',
+      fontFamily: 'DungGeunMo, monospace',
       fontSize: '14px',
       fill: '#' + nameColor.toString(16).padStart(6, '0'),
       stroke: '#000',

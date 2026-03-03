@@ -4,8 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Star의 픽셀 오피스</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri/dist/galmuri.css">
     <style>
+        @font-face {
+            font-family: 'DungGeunMo';
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+            src: url('https://cdn.jsdelivr.net/gh/fonts-archive/DungGeunMo/DungGeunMo.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/fonts-archive/DungGeunMo/DungGeunMo.woff') format('woff');
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #1a1a2e;
@@ -14,7 +21,7 @@
             justify-content: flex-start;
             align-items: center;
             min-height: 100vh;
-            font-family: 'Galmuri11', 'Courier New', monospace;
+            font-family: 'DungGeunMo', 'Courier New', monospace;
             padding: 20px 0;
             gap: 20px;
             overflow-x: hidden;
@@ -87,7 +94,7 @@
             border-radius: 4px;
             max-width: 90%;
             text-align: center;
-            font-family: 'Galmuri11', 'Courier New', monospace;
+            font-family: 'DungGeunMo', 'Courier New', monospace;
         }
         /* 상태 제어 바 */
         #control-bar {
@@ -126,7 +133,7 @@
             border-radius: 4px;
             padding: 8px 10px;
             cursor: pointer;
-            font-family: 'Galmuri11', monospace;
+            font-family: 'DungGeunMo', monospace;
             font-size: 12px;
             transition: all 0.2s;
         }
@@ -194,7 +201,7 @@
             border: 2px solid #555;
             background: #4a4f5f;
             color: #fff;
-            font-family: 'Galmuri11', monospace;
+            font-family: 'DungGeunMo', monospace;
             font-size: 12px;
             cursor: pointer;
             transition: all 0.2s;
@@ -423,13 +430,13 @@
     </div>
     
     <div id="status-text">로딩 중...</div>
-    <div id="coords-overlay" style="display:none; position:fixed; pointer-events:none; background:rgba(0,0,0,0.85); color:#fff; font-family:Galmuri11,monospace; font-size:14px; padding:8px 12px; border-radius:4px; z-index:99999;">
+    <div id="coords-overlay" style="display:none; position:fixed; pointer-events:none; background:rgba(0,0,0,0.85); color:#fff; font-family:DungGeunMo,monospace; font-size:14px; padding:8px 12px; border-radius:4px; z-index:99999;">
         <div id="coords-display">X: 0 | Y: 0</div>
     </div>
-    <button id="coords-toggle" style="position:fixed; top:calc(env(safe-area-inset-top, 0px) + 12px); right:12px; z-index:999999; padding:8px 10px; font-family:Galmuri11,monospace; font-size:13px; cursor:pointer; border:2px solid #333; border-radius:5px; background:#333; color:#fff;">
+    <button id="coords-toggle" style="position:fixed; top:calc(env(safe-area-inset-top, 0px) + 12px); right:12px; z-index:999999; padding:8px 10px; font-family:DungGeunMo,monospace; font-size:13px; cursor:pointer; border:2px solid #333; border-radius:5px; background:#333; color:#fff;">
         좌표 표시
     </button>
-    <button id="pan-toggle" style="position:fixed; top:calc(env(safe-area-inset-top, 0px) + 12px); left:12px; z-index:999999; padding:8px 10px; font-family:Galmuri11,monospace; font-size:13px; cursor:pointer; border:2px solid #333; border-radius:5px; background:#333; color:#fff;">
+    <button id="pan-toggle" style="position:fixed; top:calc(env(safe-area-inset-top, 0px) + 12px); left:12px; z-index:999999; padding:8px 10px; font-family:DungGeunMo,monospace; font-size:13px; cursor:pointer; border:2px solid #333; border-radius:5px; background:#333; color:#fff;">
         시야 이동
     </button>
 
@@ -931,7 +938,7 @@
                             if (staticAvatarKey && game.textures.exists(staticAvatarKey)) {
                                 sprite = game.add.image(p.x, p.y, staticAvatarKey).setOrigin(0.5, 1).setScale(1.15);
                             } else {
-                                sprite = game.add.text(p.x, p.y, '⭐', { fontFamily: 'Galmuri11, monospace', fontSize: '30px' }).setOrigin(0.5, 1);
+                                sprite = game.add.text(p.x, p.y, '⭐', { fontFamily: 'DungGeunMo, monospace', fontSize: '30px' }).setOrigin(0.5, 1);
                             }
                         }
                     }
@@ -945,7 +952,7 @@
 
                     const nameTextY = isDemo ? ((p.y + yOffset) - 80) : ((p.y + yOffset) - 120);
                     const nameText = game.add.text(p.x, nameTextY, agent.name || '방문자', {
-                        fontFamily: 'Galmuri11, monospace',
+                        fontFamily: 'DungGeunMo, monospace',
                         fontSize: isDemo ? '16px' : '15px',
                         fill: '#ffffff',
                         stroke: '#000',
@@ -1054,7 +1061,7 @@
             const fontSize = IS_TOUCH_DEVICE ? 14 : 12;
             const bg = game.add.rectangle(bx, by, text.length * 10 + 24, 28, 0xffffff, 0.95);
             bg.setStrokeStyle(2, 0x000000);
-            const txt = game.add.text(bx, by, text, { fontFamily: 'Galmuri11, monospace', fontSize: fontSize + 'px', fill: '#000' }).setOrigin(0.5);
+            const txt = game.add.text(bx, by, text, { fontFamily: 'DungGeunMo, monospace', fontSize: fontSize + 'px', fill: '#000' }).setOrigin(0.5);
             const bubble = game.add.container(0, 0, [bg, txt]);
             bubble.setDepth(2700);
             guestBubbles[id] = bubble;
@@ -1143,7 +1150,7 @@
                                 const fontSize = IS_TOUCH_DEVICE ? 14 : 12;
                                 const bg = game.add.rectangle(bx, by, text.length * 10 + 24, 28, 0xffffff, 0.95);
                                 bg.setStrokeStyle(2, 0x000000);
-                                const txt = game.add.text(bx, by, text, { fontFamily: 'Galmuri11, monospace', fontSize: fontSize + 'px', fill: '#000' }).setOrigin(0.5);
+                                const txt = game.add.text(bx, by, text, { fontFamily: 'DungGeunMo, monospace', fontSize: fontSize + 'px', fill: '#000' }).setOrigin(0.5);
                                 const bubble = game.add.container(0, 0, [bg, txt]);
                                 bubble.setDepth(2700);
                                 bubble.__followAgentId = agent.agentId;
@@ -1381,7 +1388,7 @@
             const plaqueBg = game.add.rectangle(plaqueX, plaqueY, 420, 44, 0x5d4037);
             plaqueBg.setStrokeStyle(3, 0x3e2723);
             const plaqueText = game.add.text(plaqueX, plaqueY, '나의 픽셀 오피스', {
-                fontFamily: 'Galmuri11, monospace',
+                fontFamily: 'DungGeunMo, monospace',
                 fontSize: '18px',
                 fill: '#ffd700',
                 fontWeight: 'bold',
@@ -1389,8 +1396,8 @@
                 strokeThickness: 2
             }).setOrigin(0.5);
             // 명판 양쪽에 작은 장식 추가 (명판 중앙 기준)
-            game.add.text(plaqueX - 190, plaqueY, '⭐', { fontFamily: 'Galmuri11, monospace', fontSize: '20px' }).setOrigin(0.5);
-            game.add.text(plaqueX + 190, plaqueY, '⭐', { fontFamily: 'Galmuri11, monospace', fontSize: '20px' }).setOrigin(0.5);
+            game.add.text(plaqueX - 190, plaqueY, '⭐', { fontFamily: 'DungGeunMo, monospace', fontSize: '20px' }).setOrigin(0.5);
+            game.add.text(plaqueX + 190, plaqueY, '⭐', { fontFamily: 'DungGeunMo, monospace', fontSize: '20px' }).setOrigin(0.5);
 
             // Random plant at (565,178) (frame 0-15, 160x160 each)
             const plantFrameCount = 16;
@@ -2086,7 +2093,7 @@
             const fontSize = isTouch ? 14 : 12;
             const bg = game.add.rectangle(anchorX, bubbleY, text.length * 10 + 20, 28, 0xffffff, 0.95);
             bg.setStrokeStyle(2, 0x000000);
-            const txt = game.add.text(anchorX, bubbleY, text, { fontFamily: 'Galmuri11, monospace', fontSize: fontSize + 'px', fill: '#000', align: 'center' }).setOrigin(0.5);
+            const txt = game.add.text(anchorX, bubbleY, text, { fontFamily: 'DungGeunMo, monospace', fontSize: fontSize + 'px', fill: '#000', align: 'center' }).setOrigin(0.5);
             bubble = game.add.container(0, 0, [bg, txt]);
             bubble.setDepth(1200); // always above desk/star
             setTimeout(() => { if (bubble) { bubble.destroy(); bubble = null; } }, 3000);
@@ -2101,7 +2108,7 @@
             const anchorY = window.catSprite.y - 60;
             const bg = game.add.rectangle(anchorX, anchorY, text.length * 10 + 20, 24, 0xfffbeb, 0.95);
             bg.setStrokeStyle(2, 0xd4a574);
-            const txt = game.add.text(anchorX, anchorY, text, { fontFamily: 'Galmuri11, monospace', fontSize: '11px', fill: '#8b6914', align: 'center' }).setOrigin(0.5);
+            const txt = game.add.text(anchorX, anchorY, text, { fontFamily: 'DungGeunMo, monospace', fontSize: '11px', fill: '#8b6914', align: 'center' }).setOrigin(0.5);
             window.catBubble = game.add.container(0, 0, [bg, txt]);
             window.catBubble.setDepth(2100); // top layer above cat
             setTimeout(() => { if (window.catBubble) { window.catBubble.destroy(); window.catBubble = null; } }, 4000);
