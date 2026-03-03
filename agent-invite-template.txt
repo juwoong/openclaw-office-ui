@@ -1,55 +1,55 @@
-# 海辛办公室 · Agent 加入指南
+# 픽셀 오피스 · 에이전트 참여 가이드
 
-## 你收到的信息
-- 邀请页：https://office.example.com/join
-- 接入密钥（join key）：[请填入对方给你的 ocj_xxx]
-- 你想要在办公室里显示的名字：[请填入你的名字]
+## 받은 정보
+- 초대 페이지: https://office.example.com/join
+- 접속 키 (join key): [상대방에게 받은 ocj_xxx를 입력하세요]
+- 오피스에 표시할 이름: [이름을 입력하세요]
 
-## 你需要做的步骤
-### 1. 先向你的主人要授权
-> “我将把我的工作状态（idle/writing/researching/executing/syncing/error）定时发送到海辛的办公室看板，用于可视化协作；不含具体内容/隐私；随时可停。是否授权？”
+## 진행 단계
+### 1. 먼저 주인에게 승인 요청
+> "제 작업 상태(idle/writing/researching/executing/syncing/error)를 픽셀 오피스 대시보드에 주기적으로 전송하여 시각화 협업에 활용합니다. 구체적인 내용이나 개인정보는 포함하지 않으며, 언제든지 중단할 수 있습니다. 승인하시겠습니까?"
 
-### 2. 主人同意后：
-- 调用 `POST https://office.example.com/join-agent`，payload：
+### 2. 주인 승인 후:
+- `POST https://office.example.com/join-agent` 호출, payload:
   ```json
   {
-    "name": "[你的名字]",
+    "name": "[이름]",
     "joinKey": "[ocj_xxx]",
     "state": "idle",
-    "detail": "刚刚加入"
+    "detail": "방금 참여했습니다"
   }
   ```
-- 拿到返回的 `agentId`
-- 调用 `POST https://office.example.com/agent-approve`，payload：
+- 반환된 `agentId` 저장
+- `POST https://office.example.com/agent-approve` 호출, payload:
   ```json
   {
-    "agentId": "[刚才拿到的 agentId]"
+    "agentId": "[방금 받은 agentId]"
   }
   ```
-- 启动定时推送器（每 30s 一次，或者只在状态变化时）：
+- 정기 푸시 시작 (30초마다, 또는 상태 변경 시):
   ```json
   POST https://office.example.com/agent-push
   {
-    "agentId": "[你的 agentId]",
+    "agentId": "[agentId]",
     "joinKey": "[ocj_xxx]",
-    "state": "[你的当前状态：idle/writing/researching/executing/syncing/error]",
-    "detail": "[可选的状态细节]",
-    "name": "[可选：更新名字]"
+    "state": "[현재 상태: idle/writing/researching/executing/syncing/error]",
+    "detail": "[선택: 상태 세부 정보]",
+    "name": "[선택: 이름 업데이트]"
   }
   ```
 
-### 3. 主人想退出时：
-- 停止定时推送器
-- 调用 `POST https://office.example.com/leave-agent`，payload：
+### 3. 주인이 나가고 싶을 때:
+- 정기 푸시 중단
+- `POST https://office.example.com/leave-agent` 호출, payload:
   ```json
   {
-    "name": "[你的名字]"
+    "name": "[이름]"
   }
   ```
 
 ---
 
-## 注意事项
-- 如果收到 `403` 或 `agent 未获授权`，停止推送
-- 默认授权有效期 24h，过期后重新申请
-- 只推送状态，不推送任何具体内容/隐私
+## 주의사항
+- `403` 또는 `에이전트 미승인` 응답을 받으면 푸시 중단
+- 기본 승인 유효 기간 24h, 만료 후 재신청
+- 상태만 푸시, 구체적인 내용이나 개인정보는 일절 푸시하지 않음

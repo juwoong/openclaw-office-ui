@@ -1,19 +1,19 @@
-// Star Office UI - 布局与层级配置
-// 所有坐标、depth、资源路径统一管理在这里
-// 避免 magic numbers，降低改错风险
+// Star Office UI - 레이아웃 및 레이어 설정
+// 모든 좌표, depth, 리소스 경로를 여기서 통합 관리
+// magic number 방지, 수정 오류 위험 감소
 
-// 核心规则：
-// - 透明资源（如办公桌）强制 .png，不透明优先 .webp
-// - 层级：低 → sofa(10) → starWorking(900) → desk(1000) → flower(1100)
+// 핵심 규칙:
+// - 투명 리소스(예: 책상)는 강제 .png, 불투명 리소스는 .webp 우선
+// - 레이어 순서: 낮음 → sofa(10) → starWorking(900) → desk(1000) → flower(1100)
 
 const LAYOUT = {
-  // === 游戏画布 ===
+  // === 게임 캔버스 ===
   game: {
     width: 1280,
     height: 720
   },
 
-  // === 各区域坐标 ===
+  // === 각 구역 좌표 ===
   areas: {
     door:        { x: 640, y: 550 },
     writing:     { x: 320, y: 360 },
@@ -22,9 +22,9 @@ const LAYOUT = {
     breakroom:   { x: 640, y: 360 }
   },
 
-  // === 装饰与家具：坐标 + 原点 + depth ===
+  // === 장식 및 가구: 좌표 + 원점 + depth ===
   furniture: {
-    // 沙发
+    // 소파
     sofa: {
       x: 670,
       y: 144,
@@ -32,7 +32,7 @@ const LAYOUT = {
       depth: 10
     },
 
-    // 新办公桌（透明 PNG 强制）
+    // 새 책상 (투명 PNG 강제)
     desk: {
       x: 218,
       y: 417,
@@ -40,7 +40,7 @@ const LAYOUT = {
       depth: 1000
     },
 
-    // 桌上花盆
+    // 책상 위 화분
     flower: {
       x: 310,
       y: 405,
@@ -48,7 +48,7 @@ const LAYOUT = {
       depth: 1100
     },
 
-    // Star 在桌前工作（在 desk 下面）
+    // Star가 책상 앞에서 작업 중 (desk 아래)
     starWorking: {
       x: 217,
       y: 333,
@@ -57,21 +57,21 @@ const LAYOUT = {
       scale: 1.32
     },
 
-    // 植物们
+    // 식물들
     plants: [
       { x: 565, y: 178, depth: 5 },
       { x: 230, y: 185, depth: 5 },
       { x: 977, y: 496, depth: 5 }
     ],
 
-    // 海报
+    // 포스터
     poster: {
       x: 252,
       y: 66,
       depth: 4
     },
 
-    // 咖啡机
+    // 커피 머신
     coffeeMachine: {
       x: 659,
       y: 397,
@@ -79,7 +79,7 @@ const LAYOUT = {
       depth: 99
     },
 
-    // 服务器区
+    // 서버실
     serverroom: {
       x: 1021,
       y: 142,
@@ -87,7 +87,7 @@ const LAYOUT = {
       depth: 2
     },
 
-    // 错误 bug
+    // 오류 버그
     errorBug: {
       x: 1007,
       y: 221,
@@ -97,7 +97,7 @@ const LAYOUT = {
       pingPong: { leftX: 1007, rightX: 1111, speed: 0.6 }
     },
 
-    // 同步动画
+    // 동기화 애니메이션
     syncAnim: {
       x: 1157,
       y: 592,
@@ -105,7 +105,7 @@ const LAYOUT = {
       depth: 40
     },
 
-    // 小猫
+    // 고양이
     cat: {
       x: 94,
       y: 557,
@@ -114,7 +114,7 @@ const LAYOUT = {
     }
   },
 
-  // === 牌匾 ===
+  // === 현판 ===
   plaque: {
     x: 640,
     y: 720 - 36,
@@ -122,11 +122,11 @@ const LAYOUT = {
     height: 44
   },
 
-  // === 资源加载规则：哪些强制用 PNG（透明资源） ===
+  // === 리소스 로딩 규칙: PNG 강제 사용 항목 (투명 리소스) ===
   forcePng: {
-    desk_v2: true // 新办公桌必须透明，强制 PNG
+    desk_v2: true // 새 책상은 반드시 투명, PNG 강제
   },
 
-  // === 总资源数量（用于加载进度条） ===
+  // === 전체 리소스 수 (로딩 진행 바 용) ===
   totalAssets: 15
 };

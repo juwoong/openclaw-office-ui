@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>加入 Star 的像素办公室</title>
+    <title>Star의 픽셀 오피스 참여</title>
     <style>
         @font-face {
             font-family: 'ArkPixel';
@@ -100,26 +100,26 @@
     </style>
 </head>
 <body>
-    <h1>⭐ 加入 Star 的像素办公室</h1>
+    <h1>⭐ Star의 픽셀 오피스 참여</h1>
     <div class="container">
         <div class="form-group">
-            <label>你的名字（会显示在办公室）</label>
-            <input type="text" id="agentName" placeholder="例如：小龙虾助手" maxlength="20">
+            <label>이름 (오피스에 표시됩니다)</label>
+            <input type="text" id="agentName" placeholder="예: 어시스턴트" maxlength="20">
         </div>
-        <!-- 状态与细节改为自动同步，不在 join 页面填写 -->
+        <!-- 상태 및 세부 정보는 자동 동기화로 변경, join 페이지에서 입력하지 않음 -->
         <div class="form-group">
-            <label>Agent 接入密钥（一次性）</label>
-            <input type="text" id="joinKey" placeholder="请输入你拿到的 join key" maxlength="64">
+            <label>에이전트 접속 키 (일회용)</label>
+            <input type="text" id="joinKey" placeholder="받은 join key를 입력하세요" maxlength="64">
         </div>
-        <button id="joinBtn">加入办公室</button>
-        <button id="leaveBtn" style="margin-top:10px; background:#555; border-color:#555;">离开办公室</button>
+        <button id="joinBtn">오피스 참여</button>
+        <button id="leaveBtn" style="margin-top:10px; background:#555; border-color:#555;">오피스 나가기</button>
         <div id="status" class="status" style="display:none;"></div>
     </div>
     <div class="note">
-        ⚠️ 注意：join 页面仅需要名字 + 一次性 join key<br>
-        状态与状态细节会由 agent 后续自动推送同步
+        ⚠️ 참고: join 페이지에는 이름 + 일회용 join key만 필요합니다<br>
+        상태 및 상태 세부 정보는 에이전트가 자동으로 푸시하여 동기화합니다
         <br><br>
-        📌 邀请说明：
+        📌 초대 안내:
         <a href="/invite" style="color:#ffd700; text-decoration: underline;">https://office.example.com/invite</a>
     </div>
 
@@ -140,11 +140,11 @@
             const name = agentNameInput.value.trim();
             const joinKey = joinKeyInput.value.trim();
             if (!name) {
-                showStatus('请先输入你的名字～', false);
+                showStatus('이름을 먼저 입력해주세요～', false);
                 return;
             }
             if (!joinKey) {
-                showStatus('请先输入 Agent 接入密钥～', false);
+                showStatus('에이전트 접속 키를 먼저 입력해주세요～', false);
                 return;
             }
             try {
@@ -155,19 +155,19 @@
                 });
                 const data = await response.json();
                 if (data.ok) {
-                    showStatus('加入成功！刷新办公室就能看到你啦 ✨', true);
+                    showStatus('참여 성공! 오피스를 새로고침하면 볼 수 있어요 ✨', true);
                 } else {
-                    showStatus(data.msg || '加入失败', false);
+                    showStatus(data.msg || '참여 실패', false);
                 }
             } catch (e) {
-                showStatus('网络出错，请重试', false);
+                showStatus('네트워크 오류, 다시 시도해주세요', false);
             }
         }
 
         async function leave() {
             const name = agentNameInput.value.trim();
             if (!name) {
-                showStatus('请先输入你要离开的名字～', false);
+                showStatus('나갈 이름을 먼저 입력해주세요～', false);
                 return;
             }
             try {
@@ -178,12 +178,12 @@
                 });
                 const data = await response.json();
                 if (data.ok) {
-                    showStatus('已离开办公室 👋', true);
+                    showStatus('오피스에서 나갔습니다 👋', true);
                 } else {
-                    showStatus(data.msg || '离开失败', false);
+                    showStatus(data.msg || '나가기 실패', false);
                 }
             } catch (e) {
-                showStatus('网络出错，请重试', false);
+                showStatus('네트워크 오류, 다시 시도해주세요', false);
             }
         }
 
