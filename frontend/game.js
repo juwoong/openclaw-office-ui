@@ -1,10 +1,10 @@
-// Star Office UI - 游戏主逻辑
-// 依赖: layout.js（必须在这个之前加载）
+// Star Office UI - 게임 주요 로직
+// 의존성: layout.js (반드시 이 파일보다 먼저 로드해야 함)
 
-// 检测浏览器是否支持 WebP
+// 브라우저의 WebP 지원 여부 확인
 let supportsWebP = false;
 
-// 方法 1: 使用 canvas 检测
+// 방법 1: canvas를 사용하여 감지
 function checkWebPSupport() {
   return new Promise((resolve) => {
     const canvas = document.createElement('canvas');
@@ -16,7 +16,7 @@ function checkWebPSupport() {
   });
 }
 
-// 方法 2: 使用 image 检测（备用）
+// 방법 2: image를 사용하여 감지 (폴백)
 function checkWebPSupportFallback() {
   return new Promise((resolve) => {
     const img = new Image();
@@ -26,13 +26,13 @@ function checkWebPSupportFallback() {
   });
 }
 
-// 获取文件扩展名（根据 WebP 支持情况 + 布局配置的 forcePng）
+// 파일 확장자 가져오기 (WebP 지원 여부 + 레이아웃 설정의 forcePng에 따라)
 function getExt(pngFile) {
-  // star-working-spritesheet.png 太宽了，WebP 不支持，始终用 PNG
+  // star-working-spritesheet.png는 너무 넓어 WebP 미지원, 항상 PNG 사용
   if (pngFile === 'star-working-spritesheet.png') {
     return '.png';
   }
-  // 如果布局配置里强制用 PNG，就用 .png
+  // 레이아웃 설정에서 PNG 강제 지정 시 .png 사용
   if (LAYOUT.forcePng && LAYOUT.forcePng[pngFile.replace(/\.(png|webp)$/, '')]) {
     return '.png';
   }
@@ -53,7 +53,7 @@ let totalAssets = 0;
 let loadedAssets = 0;
 let loadingProgressBar, loadingProgressContainer, loadingOverlay, loadingText;
 
-// Memo 相关函数
+// Memo 관련 함수
 async function loadMemo() {
   const memoDate = document.getElementById('memo-date');
   const memoContent = document.getElementById('memo-content');
@@ -66,15 +66,15 @@ async function loadMemo() {
       memoDate.textContent = data.date || '';
       memoContent.innerHTML = data.memo.replace(/\n/g, '<br>');
     } else {
-      memoContent.innerHTML = '<div id="memo-placeholder">暂无昨日日记</div>';
+      memoContent.innerHTML = '<div id="memo-placeholder">어제 일지 없음</div>';
     }
   } catch (e) {
-    console.error('加载 memo 失败:', e);
-    memoContent.innerHTML = '<div id="memo-placeholder">加载失败</div>';
+    console.error('메모 로딩 실패:', e);
+    memoContent.innerHTML = '<div id="memo-placeholder">로딩 실패</div>';
   }
 }
 
-// 更新加载进度
+// 로딩 진행률 업데이트
 function updateLoadingProgress() {
   loadedAssets++;
   const percent = Math.min(100, Math.round((loadedAssets / totalAssets) * 100));
@@ -82,11 +82,11 @@ function updateLoadingProgress() {
     loadingProgressBar.style.width = percent + '%';
   }
   if (loadingText) {
-    loadingText.textContent = `正在加载 Star 的像素办公室... ${percent}%`;
+    loadingText.textContent = `Star의 픽셀 오피스 로딩 중... ${percent}%`;
   }
 }
 
-// 隐藏加载界面
+// 로딩 화면 숨기기
 function hideLoadingOverlay() {
   setTimeout(() => {
     if (loadingOverlay) {
@@ -100,90 +100,90 @@ function hideLoadingOverlay() {
 }
 
 const STATES = {
-  idle: { name: '待命', area: 'breakroom' },
-  writing: { name: '整理文档', area: 'writing' },
-  researching: { name: '搜索信息', area: 'researching' },
-  executing: { name: '执行任务', area: 'writing' },
-  syncing: { name: '同步备份', area: 'writing' },
-  error: { name: '出错了', area: 'error' }
+  idle: { name: '대기', area: 'breakroom' },
+  writing: { name: '문서 정리', area: 'writing' },
+  researching: { name: '정보 검색', area: 'researching' },
+  executing: { name: '작업 실행', area: 'writing' },
+  syncing: { name: '동기화/백업', area: 'writing' },
+  error: { name: '오류 발생', area: 'error' }
 };
 
 const BUBBLE_TEXTS = {
   idle: [
-    '待命中：耳朵竖起来了',
-    '我在这儿，随时可以开工',
-    '先把桌面收拾干净再说',
-    '呼——给大脑放个风',
-    '今天也要优雅地高效',
-    '等待，是为了更准确的一击',
-    '咖啡还热，灵感也还在',
-    '我在后台给你加 Buff',
-    '状态：静心 / 充电',
-    '小猫说：慢一点也没关系'
+    '대기 중: 귀를 쫑긋 세웠어요',
+    '여기 있어요, 언제든 시작할 준비 완료',
+    '일단 바탕화면부터 정리해요',
+    '후—— 머리에 바람 좀 넣어요',
+    '오늘도 우아하게 효율적으로',
+    '기다림은 더 정확한 한 방을 위해서예요',
+    '커피도 따뜻하고 영감도 아직 있어요',
+    '백그라운드에서 버프 충전 중이에요',
+    '상태: 마음 다스리기 / 충전 중',
+    '고양이 왈: 조금 느려도 괜찮아요'
   ],
   writing: [
-    '进入专注模式：勿扰',
-    '先把关键路径跑通',
-    '我来把复杂变简单',
-    '把 bug 关进笼子里',
-    '写到一半，先保存',
-    '把每一步都做成可回滚',
-    '今天的进度，明天的底气',
-    '先收敛，再发散',
-    '让系统变得更可解释',
-    '稳住，我们能赢'
+    '집중 모드 진입: 방해 금지',
+    '핵심 경로부터 먼저 뚫어요',
+    '복잡한 걸 단순하게 만들어 드릴게요',
+    '버그를 우리 안에 가둬요',
+    '반쯤 썼으면 일단 저장부터',
+    '모든 단계를 롤백 가능하게 만들어요',
+    '오늘의 진도가 내일의 자신감이에요',
+    '먼저 수렴하고, 그다음 확산해요',
+    '시스템을 더 설명 가능하게 만들어요',
+    '침착하게, 우리 이길 수 있어요'
   ],
   researching: [
-    '我在挖证据链',
-    '让我把信息熬成结论',
-    '找到了：关键在这里',
-    '先把变量控制住',
-    '我在查：它为什么会这样',
-    '把直觉写成验证',
-    '先定位，再优化',
-    '别急，先画因果图'
+    '증거 체인을 파고 있어요',
+    '정보를 결론으로 졸여 드릴게요',
+    '찾았어요: 핵심이 여기 있네요',
+    '먼저 변수를 통제해요',
+    '조사 중: 왜 이렇게 됐는지 찾고 있어요',
+    '직관을 검증으로 바꿔요',
+    '먼저 위치 파악, 그다음 최적화',
+    '서두르지 말고 인과도부터 그려요'
   ],
   executing: [
-    '执行中：不要眨眼',
-    '把任务切成小块逐个击破',
-    '开始跑 pipeline',
-    '一键推进：走你',
-    '让结果自己说话',
-    '先做最小可行，再做最美版本'
+    '실행 중: 눈 깜짝하지 마세요',
+    '작업을 작게 쪼개서 하나씩 처리해요',
+    '파이프라인 시작해요',
+    '원클릭 진행: 출발',
+    '결과가 스스로 말하게 해요',
+    '먼저 최소 실행 가능 버전, 그다음 최고로 예쁜 버전'
   ],
   syncing: [
-    '同步中：把今天锁进云里',
-    '备份不是仪式，是安全感',
-    '写入中…别断电',
-    '把变更交给时间戳',
-    '云端对齐：咔哒',
-    '同步完成前先别乱动',
-    '把未来的自己从灾难里救出来',
-    '多一份备份，少一份后悔'
+    '동기화 중: 오늘을 클라우드에 잠가요',
+    '백업은 의식이 아니라 안전감이에요',
+    '쓰는 중… 전원 끄지 마세요',
+    '변경 사항을 타임스탬프에 맡겨요',
+    '클라우드 정렬 완료: 찰칵',
+    '동기화 완료 전에 건드리지 마세요',
+    '미래의 나를 재난에서 구해내요',
+    '백업 하나 더, 후회 하나 줄어요'
   ],
   error: [
-    '警报响了：先别慌',
-    '我闻到 bug 的味道了',
-    '先复现，再谈修复',
-    '把日志给我，我会说人话',
-    '错误不是敌人，是线索',
-    '把影响面圈起来',
-    '先止血，再手术',
-    '我在：马上定位根因',
-    '别怕，这种我见多了',
-    '报警中：让问题自己现形'
+    '경보가 울렸어요: 일단 침착하게',
+    '버그 냄새가 나요',
+    '먼저 재현, 그다음 수정 얘기해요',
+    '로그 주세요, 사람 말로 번역해 드릴게요',
+    '오류는 적이 아니라 단서예요',
+    '영향 범위를 특정해요',
+    '먼저 지혈, 그다음 수술',
+    '여기 있어요: 바로 근본 원인 찾을게요',
+    '걱정 마세요, 이런 거 많이 봤어요',
+    '경보 중: 문제가 스스로 드러나게 해요'
   ],
   cat: [
-    '喵~',
-    '咕噜咕噜…',
-    '尾巴摇一摇',
-    '晒太阳最开心',
-    '有人来看我啦',
-    '我是这个办公室的吉祥物',
-    '伸个懒腰',
-    '今天的罐罐准备好了吗',
-    '呼噜呼噜',
-    '这个位置视野最好'
+    '야옹~',
+    '그르릉그르릉…',
+    '꼬리를 흔들어요',
+    '햇빛 쬐는 게 제일 행복해요',
+    '누가 나 보러 왔어요',
+    '저는 이 사무실의 마스코트예요',
+    '기지개 한 번 펴요',
+    '오늘 캔 간식은 준비됐나요',
+    '가르랑가르랑',
+    '이 자리가 전망이 제일 좋아요'
   ]
 };
 
@@ -203,7 +203,7 @@ let agents = {}; // agentId -> sprite/container
 let lastAgentsFetch = 0;
 const AGENTS_FETCH_INTERVAL = 2500;
 
-// agent 颜色配置
+// 에이전트 색상 설정
 const AGENT_COLORS = {
   star: 0xffd700,
   npc1: 0x00aaff,
@@ -211,7 +211,7 @@ const AGENT_COLORS = {
   default: 0x94a3b8
 };
 
-// agent 名字颜色
+// 에이전트 이름 색상
 const NAME_TAG_COLORS = {
   approved: 0x22c55e,
   pending: 0xf59e0b,
@@ -220,7 +220,7 @@ const NAME_TAG_COLORS = {
   default: 0x1f2937
 };
 
-// breakroom / writing / error 区域的 agent 分布位置（多 agent 时错开）
+// breakroom / writing / error 구역의 에이전트 배치 위치 (여러 에이전트 시 분산)
 const AREA_POSITIONS = {
   breakroom: [
     { x: 620, y: 180 },
@@ -242,7 +242,7 @@ const AREA_POSITIONS = {
 let areaPositionCounters = { breakroom: 0, writing: 0, error: 0 };
 
 
-// 状态控制栏函数（用于测试）
+// 상태 제어 바 함수 (테스트용)
 function setState(state, detail) {
   fetch('/set_state', {
     method: 'POST',
@@ -251,7 +251,7 @@ function setState(state, detail) {
   }).then(() => fetchStatus());
 }
 
-// 初始化：先检测 WebP 支持，再启动游戏
+// 초기화: 먼저 WebP 지원 확인 후 게임 시작
 async function initGame() {
   try {
     supportsWebP = await checkWebPSupport();
@@ -263,7 +263,7 @@ async function initGame() {
     }
   }
 
-  console.log('WebP 支持:', supportsWebP);
+  console.log('WebP 지원:', supportsWebP);
   new Phaser.Game(config);
 }
 
@@ -273,7 +273,7 @@ function preload() {
   loadingText = document.getElementById('loading-text');
   loadingProgressContainer = document.getElementById('loading-progress-container');
 
-  // 从 LAYOUT 读取总资源数量（避免 magic number）
+  // LAYOUT에서 총 리소스 수 읽기 (매직 넘버 방지)
   totalAssets = LAYOUT.totalAssets || 15;
   loadedAssets = 0;
 
@@ -304,7 +304,7 @@ function preload() {
   this.load.spritesheet('sync_anim', '/static/sync-animation-spritesheet-grid' + (supportsWebP ? '.webp' : '.png'), { frameWidth: 256, frameHeight: 256 });
   this.load.image('memo_bg', '/static/memo-bg' + (supportsWebP ? '.webp' : '.png'));
 
-  // 新办公桌：强制 PNG（透明）
+  // 새 사무용 책상: PNG 강제 (투명)
   this.load.image('desk_v2', '/static/desk-v2.png');
   this.load.spritesheet('flowers', '/static/flowers-spritesheet' + (supportsWebP ? '.webp' : '.png'), { frameWidth: 65, frameHeight: 65 });
 }
@@ -313,7 +313,7 @@ function create() {
   game = this;
   this.add.image(640, 360, 'office_bg');
 
-  // === 沙发（来自 LAYOUT）===
+  // === 소파 (LAYOUT에서) ===
   sofa = this.add.sprite(
     LAYOUT.furniture.sofa.x,
     LAYOUT.furniture.sofa.y,
@@ -356,23 +356,23 @@ function create() {
     sofa.anims.play('sofa_busy', true);
   }
 
-  // === 牌匾（来自 LAYOUT）===
+  // === 명판 (LAYOUT에서) ===
   const plaqueX = LAYOUT.plaque.x;
   const plaqueY = LAYOUT.plaque.y;
   const plaqueBg = game.add.rectangle(plaqueX, plaqueY, LAYOUT.plaque.width, LAYOUT.plaque.height, 0x5d4037);
   plaqueBg.setStrokeStyle(3, 0x3e2723);
-  const plaqueText = game.add.text(plaqueX, plaqueY, '海辛小龙虾的办公室', {
-    fontFamily: 'ArkPixel, monospace',
+  const plaqueText = game.add.text(plaqueX, plaqueY, '나의 픽셀 오피스', {
+    fontFamily: 'DungGeunMo, monospace',
     fontSize: '18px',
     fill: '#ffd700',
     fontWeight: 'bold',
     stroke: '#000',
     strokeThickness: 2
   }).setOrigin(0.5);
-  game.add.text(plaqueX - 190, plaqueY, '⭐', { fontFamily: 'ArkPixel, monospace', fontSize: '20px' }).setOrigin(0.5);
-  game.add.text(plaqueX + 190, plaqueY, '⭐', { fontFamily: 'ArkPixel, monospace', fontSize: '20px' }).setOrigin(0.5);
+  game.add.text(plaqueX - 190, plaqueY, '⭐', { fontFamily: 'DungGeunMo, monospace', fontSize: '20px' }).setOrigin(0.5);
+  game.add.text(plaqueX + 190, plaqueY, '⭐', { fontFamily: 'DungGeunMo, monospace', fontSize: '20px' }).setOrigin(0.5);
 
-  // === 植物们（来自 LAYOUT）===
+  // === 식물들 (LAYOUT에서) ===
   const plantFrameCount = 16;
   for (let i = 0; i < LAYOUT.furniture.plants.length; i++) {
     const p = LAYOUT.furniture.plants[i];
@@ -387,7 +387,7 @@ function create() {
     }));
   }
 
-  // === 海报（来自 LAYOUT）===
+  // === 포스터 (LAYOUT에서) ===
   const postersFrameCount = 32;
   const randomPosterFrame = Math.floor(Math.random() * postersFrameCount);
   const poster = game.add.sprite(LAYOUT.furniture.poster.x, LAYOUT.furniture.poster.y, 'posters', randomPosterFrame).setOrigin(0.5);
@@ -400,7 +400,7 @@ function create() {
     window.posterSprite.setFrame(next);
   });
 
-  // === 小猫（来自 LAYOUT）===
+  // === 고양이 (LAYOUT에서) ===
   const catsFrameCount = 16;
   const randomCatFrame = Math.floor(Math.random() * catsFrameCount);
   const cat = game.add.sprite(LAYOUT.furniture.cat.x, LAYOUT.furniture.cat.y, 'cats', randomCatFrame).setOrigin(LAYOUT.furniture.cat.origin.x, LAYOUT.furniture.cat.origin.y);
@@ -413,7 +413,7 @@ function create() {
     window.catSprite.setFrame(next);
   });
 
-  // === 咖啡机（来自 LAYOUT）===
+  // === 커피 머신 (LAYOUT에서) ===
   this.anims.create({
     key: 'coffee_machine',
     frames: this.anims.generateFrameNumbers('coffee_machine', { start: 0, end: 95 }),
@@ -428,7 +428,7 @@ function create() {
   coffeeMachine.setDepth(LAYOUT.furniture.coffeeMachine.depth);
   coffeeMachine.anims.play('coffee_machine', true);
 
-  // === 服务器区（来自 LAYOUT）===
+  // === 서버 구역 (LAYOUT에서) ===
   this.anims.create({
     key: 'serverroom_on',
     frames: this.anims.generateFrameNumbers('serverroom', { start: 0, end: 39 }),
@@ -445,7 +445,7 @@ function create() {
   serverroom.anims.stop();
   serverroom.setFrame(0);
 
-  // === 新办公桌（来自 LAYOUT，强制透明 PNG）===
+  // === 새 사무용 책상 (LAYOUT에서, 투명 PNG 강제) ===
   const desk = this.add.image(
     LAYOUT.furniture.desk.x,
     LAYOUT.furniture.desk.y,
@@ -453,7 +453,7 @@ function create() {
   ).setOrigin(LAYOUT.furniture.desk.origin.x, LAYOUT.furniture.desk.origin.y);
   desk.setDepth(LAYOUT.furniture.desk.depth);
 
-  // === 花盆（来自 LAYOUT）===
+  // === 화분 (LAYOUT에서) ===
   const flowerFrameCount = 16;
   const randomFlowerFrame = Math.floor(Math.random() * flowerFrameCount);
   const flower = this.add.sprite(
@@ -471,7 +471,7 @@ function create() {
     window.flowerSprite.setFrame(next);
   });
 
-  // === Star 在桌前工作（来自 LAYOUT）===
+  // === Star가 책상에서 작업 (LAYOUT에서) ===
   this.anims.create({
     key: 'star_working',
     frames: this.anims.generateFrameNumbers('star_working', { start: 0, end: 191 }),
@@ -485,7 +485,7 @@ function create() {
     repeat: -1
   });
 
-  // === 错误 bug（来自 LAYOUT）===
+  // === 오류 버그 (LAYOUT에서) ===
   const errorBug = this.add.sprite(
     LAYOUT.furniture.errorBug.x,
     LAYOUT.furniture.errorBug.y,
@@ -510,7 +510,7 @@ function create() {
   starWorking.setDepth(LAYOUT.furniture.starWorking.depth);
   window.starWorking = starWorking;
 
-  // === 同步动画（来自 LAYOUT）===
+  // === 동기화 애니메이션 (LAYOUT에서) ===
   this.anims.create({
     key: 'sync_anim',
     frames: this.anims.generateFrameNumbers('sync_anim', { start: 1, end: 52 }),
@@ -537,7 +537,7 @@ function create() {
   coordsToggle.addEventListener('click', () => {
     showCoords = !showCoords;
     coordsOverlay.style.display = showCoords ? 'block' : 'none';
-    coordsToggle.textContent = showCoords ? '隐藏坐标' : '显示坐标';
+    coordsToggle.textContent = showCoords ? '좌표 숨기기' : '좌표 표시';
     coordsToggle.style.background = showCoords ? '#e94560' : '#333';
   });
 
@@ -552,13 +552,13 @@ function create() {
 
   loadMemo();
   fetchStatus();
-  // 先强制加一个测试用的尼卡 agent 渲染
+  // 테스트용 에이전트 렌더링 강제 추가
   const testNika = {
     agentId: 'agent_nika',
-    name: '尼卡',
+    name: '니카',
     isMain: false,
     state: 'writing',
-    detail: '在画像素画...',
+    detail: '픽셀 아트 그리는 중...',
     area: 'writing',
     authStatus: 'approved',
     updated_at: new Date().toISOString()
@@ -566,7 +566,7 @@ function create() {
   renderAgent(testNika);
   fetchAgents();
 
-  // 测试用：让尼卡模拟走来走去
+  // 테스트용: 에이전트 이동 시뮬레이션
   window.testNikaState = 'writing';
   window.testNikaTimer = setInterval(() => {
     const states = ['idle', 'writing', 'researching', 'executing'];
@@ -574,10 +574,10 @@ function create() {
     window.testNikaState = states[Math.floor(Math.random() * states.length)];
     const testAgent = {
       agentId: 'agent_nika',
-      name: '尼卡',
+      name: '니카',
       isMain: false,
       state: window.testNikaState,
-      detail: '在画像素画...',
+      detail: '픽셀 아트 그리는 중...',
       area: areas[window.testNikaState],
       authStatus: 'approved',
       updated_at: new Date().toISOString()
@@ -752,7 +752,7 @@ function fetchStatus() {
       }
     })
     .catch(error => {
-      typewriterTarget = '连接失败，正在重试...';
+      typewriterTarget = '연결 실패, 재시도 중...';
       typewriterText = '';
       typewriterIndex = 0;
     });
@@ -858,7 +858,7 @@ function showBubble() {
   const bubbleY = anchorY - 70;
   const bg = game.add.rectangle(anchorX, bubbleY, text.length * 10 + 20, 28, 0xffffff, 0.95);
   bg.setStrokeStyle(2, 0x000000);
-  const txt = game.add.text(anchorX, bubbleY, text, { fontFamily: 'ArkPixel, monospace', fontSize: '12px', fill: '#000', align: 'center' }).setOrigin(0.5);
+  const txt = game.add.text(anchorX, bubbleY, text, { fontFamily: 'DungGeunMo, monospace', fontSize: '12px', fill: '#000', align: 'center' }).setOrigin(0.5);
   bubble = game.add.container(0, 0, [bg, txt]);
   bubble.setDepth(1200);
   setTimeout(() => { if (bubble) { bubble.destroy(); bubble = null; } }, 3000);
@@ -867,13 +867,13 @@ function showBubble() {
 function showCatBubble() {
   if (!window.catSprite) return;
   if (window.catBubble) { window.catBubble.destroy(); window.catBubble = null; }
-  const texts = BUBBLE_TEXTS.cat || ['喵~', '咕噜咕噜…'];
+  const texts = BUBBLE_TEXTS.cat || ['야옹~', '그르릉그르릉…'];
   const text = texts[Math.floor(Math.random() * texts.length)];
   const anchorX = window.catSprite.x;
   const anchorY = window.catSprite.y - 60;
   const bg = game.add.rectangle(anchorX, anchorY, text.length * 10 + 20, 24, 0xfffbeb, 0.95);
   bg.setStrokeStyle(2, 0xd4a574);
-  const txt = game.add.text(anchorX, anchorY, text, { fontFamily: 'ArkPixel, monospace', fontSize: '11px', fill: '#8b6914', align: 'center' }).setOrigin(0.5);
+  const txt = game.add.text(anchorX, anchorY, text, { fontFamily: 'DungGeunMo, monospace', fontSize: '11px', fill: '#8b6914', align: 'center' }).setOrigin(0.5);
   window.catBubble = game.add.container(0, 0, [bg, txt]);
   window.catBubble.setDepth(2100);
   setTimeout(() => { if (window.catBubble) { window.catBubble.destroy(); window.catBubble = null; } }, 4000);
@@ -884,13 +884,13 @@ function fetchAgents() {
     .then(response => response.json())
     .then(data => {
       if (!Array.isArray(data)) return;
-      // 重置位置计数器
+      // 위치 카운터 초기화
       areaPositionCounters = { breakroom: 0, writing: 0, error: 0 };
-      // 处理每个 agent
+      // 각 에이전트 처리
       for (let agent of data) {
         renderAgent(agent);
       }
-      // 移除不再存在的 agent
+      // 더 이상 존재하지 않는 에이전트 제거
       const currentIds = new Set(data.map(a => a.agentId));
       for (let id in agents) {
         if (!currentIds.has(id)) {
@@ -902,7 +902,7 @@ function fetchAgents() {
       }
     })
     .catch(error => {
-      console.error('拉取 agents 失败:', error);
+      console.error('에이전트 목록 로딩 실패:', error);
     });
 }
 
@@ -920,36 +920,36 @@ function renderAgent(agent) {
   const authStatus = agent.authStatus || 'pending';
   const isMain = !!agent.isMain;
 
-  // 获取这个 agent 在区域里的位置
+  // 에이전트의 구역 내 위치 가져오기
   const pos = getAreaPosition(area);
   const baseX = pos.x;
   const baseY = pos.y;
 
-  // 颜色
+  // 색상
   const bodyColor = AGENT_COLORS[agentId] || AGENT_COLORS.default;
   const nameColor = NAME_TAG_COLORS[authStatus] || NAME_TAG_COLORS.default;
 
-  // 透明度（离线/待批准/拒绝时变半透明）
+  // 불투명도 (오프라인/대기/거부 시 반투명)
   let alpha = 1;
   if (authStatus === 'pending') alpha = 0.7;
   if (authStatus === 'rejected') alpha = 0.4;
   if (authStatus === 'offline') alpha = 0.5;
 
   if (!agents[agentId]) {
-    // 新建 agent
+    // 새 에이전트 생성
     const container = game.add.container(baseX, baseY);
-    container.setDepth(1200 + (isMain ? 100 : 0)); // 放到最顶层！
+    container.setDepth(1200 + (isMain ? 100 : 0)); // 최상단에 배치!
 
-    // 像素小人：用星星图标，更明显
+    // 픽셀 캐릭터: 별 아이콘 사용, 더 눈에 띄게
     const starIcon = game.add.text(0, 0, '⭐', {
-      fontFamily: 'ArkPixel, monospace',
+      fontFamily: 'DungGeunMo, monospace',
       fontSize: '32px'
     }).setOrigin(0.5);
     starIcon.name = 'starIcon';
 
-    // 名字标签（漂浮）
+    // 이름 태그 (플로팅)
     const nameTag = game.add.text(0, -36, name, {
-      fontFamily: 'ArkPixel, monospace',
+      fontFamily: 'DungGeunMo, monospace',
       fontSize: '14px',
       fill: '#' + nameColor.toString(16).padStart(6, '0'),
       stroke: '#000',
@@ -958,7 +958,7 @@ function renderAgent(agent) {
     }).setOrigin(0.5);
     nameTag.name = 'nameTag';
 
-    // 状态小点（绿色/黄色/红色）
+    // 상태 점 (초록/노랑/빨강)
     let dotColor = 0x64748b;
     if (authStatus === 'approved') dotColor = 0x22c55e;
     if (authStatus === 'pending') dotColor = 0xf59e0b;
@@ -971,19 +971,19 @@ function renderAgent(agent) {
     container.add([starIcon, statusDot, nameTag]);
     agents[agentId] = container;
   } else {
-    // 更新 agent
+    // 에이전트 업데이트
     const container = agents[agentId];
     container.setPosition(baseX, baseY);
     container.setAlpha(alpha);
     container.setDepth(1200 + (isMain ? 100 : 0));
 
-    // 更新名字和颜色（如果变化）
+    // 이름 및 색상 업데이트 (변경 시)
     const nameTag = container.getAt(2);
     if (nameTag && nameTag.name === 'nameTag') {
       nameTag.setText(name);
       nameTag.setFill('#' + (NAME_TAG_COLORS[authStatus] || NAME_TAG_COLORS.default).toString(16).padStart(6, '0'));
     }
-    // 更新状态点颜色
+    // 상태 점 색상 업데이트
     const statusDot = container.getAt(1);
     if (statusDot && statusDot.name === 'statusDot') {
       let dotColor = 0x64748b;
@@ -996,5 +996,5 @@ function renderAgent(agent) {
   }
 }
 
-// 启动游戏
+// 게임 시작
 initGame();
