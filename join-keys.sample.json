@@ -1,47 +1,42 @@
 {
   "keys": [
     {
-      "key": "ocj_starteam01",
+      "key": "your-secret-key-here-01",
       "name": "团队成员 01",
-      "maxConcurrent": 3,
-      "used": true,
-      "usedBy": "阿龙虾",
-      "usedByAgentId": "agent_1772347959385_px4w",
-      "usedAt": "2026-03-01T14:52:39.385922",
-      "reusable": true
+      "maxConcurrent": 3
     },
     {
-      "key": "ocj_starteam02",
+      "key": "your-secret-key-here-02",
       "name": "团队成员 02",
       "maxConcurrent": 3
     },
     {
-      "key": "ocj_starteam03",
+      "key": "your-secret-key-here-03",
       "name": "团队成员 03",
       "maxConcurrent": 3
     },
     {
-      "key": "ocj_starteam04",
+      "key": "your-secret-key-here-04",
       "name": "团队成员 04",
       "maxConcurrent": 3
     },
     {
-      "key": "ocj_starteam05",
+      "key": "your-secret-key-here-05",
       "name": "团队成员 05",
       "maxConcurrent": 3
     },
     {
-      "key": "ocj_starteam06",
+      "key": "your-secret-key-here-06",
       "name": "团队成员 06",
       "maxConcurrent": 3
     },
     {
-      "key": "ocj_starteam07",
+      "key": "your-secret-key-here-07",
       "name": "团队成员 07",
       "maxConcurrent": 3
     },
     {
-      "key": "ocj_starteam08",
+      "key": "your-secret-key-here-08",
       "name": "团队成员 08",
       "maxConcurrent": 3
     }

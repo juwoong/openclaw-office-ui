@@ -181,7 +181,71 @@ python3 set_state.py idle "待命中"
 
 ---
 
-## 8、作者社交账号
+## 9、安全配置指南
+
+### `OFFICE_ADMIN_TOKEN` 环境变量
+
+`/set_state`、`/agent-approve`、`/agent-reject` 端点需要管理员 Token 验证。
+
+启动前，请设置环境变量：
+```bash
+export OFFICE_ADMIN_TOKEN="your-strong-random-secret"
+cd backend
+python3 app.py
+```
+
+调用受保护端点时，在请求头中传入：
+```
+Authorization: Bearer your-strong-random-secret
+```
+
+如果未设置 `OFFICE_ADMIN_TOKEN`，服务器启动时会在日志中输出警告，且所有受保护端点将返回 `401 Unauthorized`。
+
+### `join-keys.json` 配置
+
+`join-keys.json` 包含接入密钥，**请勿将其提交到版本控制系统**。
+
+初次使用时，请从样例文件复制并修改为自己的密钥：
+```bash
+cp join-keys.sample.json join-keys.json
+# 编辑 join-keys.json，将 "your-secret-key-here-*" 替换为真实密钥
+```
+
+---
+
+## Security Configuration Guide
+
+### `OFFICE_ADMIN_TOKEN` Environment Variable
+
+The `/set_state`, `/agent-approve`, and `/agent-reject` endpoints require admin token authentication.
+
+Before starting the server, set the environment variable:
+```bash
+export OFFICE_ADMIN_TOKEN="your-strong-random-secret"
+cd backend
+python3 app.py
+```
+
+When calling protected endpoints, include the header:
+```
+Authorization: Bearer your-strong-random-secret
+```
+
+If `OFFICE_ADMIN_TOKEN` is not set, the server will log a warning on startup and all protected endpoints will return `401 Unauthorized`.
+
+### `join-keys.json` Configuration
+
+`join-keys.json` contains join keys — **never commit this file to version control**.
+
+On first use, copy from the sample file and edit with your own keys:
+```bash
+cp join-keys.sample.json join-keys.json
+# Edit join-keys.json and replace "your-secret-key-here-*" with real keys
+```
+
+---
+
+
 
 - **X：Ring Hyacinth (@ring_hyacinth)**  
   https://x.com/ring_hyacinth
