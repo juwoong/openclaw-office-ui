@@ -25,3 +25,9 @@ cloudflared.out
 healthcheck.log
 backend.log
 frontend/office_bg.png
+
+# Docker data directory
+data/state.json
+data/agents-state.json
+data/join-keys.json
+data/memory/

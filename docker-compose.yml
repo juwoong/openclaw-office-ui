@@ -1,0 +1,15 @@
+# Run `bash init-data.sh` before the first `docker compose up` to create
+# the data/ directory and initialize JSON files from sample templates.
+services:
+  office:
+    build: .
+    ports:
+      - "18791:18791"
+    environment:
+      - OFFICE_ADMIN_TOKEN=${OFFICE_ADMIN_TOKEN}
+    volumes:
+      - ./data/state.json:/app/state.json
+      - ./data/agents-state.json:/app/agents-state.json
+      - ./data/join-keys.json:/app/join-keys.json
+      - ./data/memory:/memory
+    restart: unless-stopped
